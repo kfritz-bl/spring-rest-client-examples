@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
- * Created by jt on 9/21/17.
+ * The ApiService implementation class.
  */
 @Service
 public class ApiServiceImpl implements ApiService {
@@ -23,6 +23,12 @@ public class ApiServiceImpl implements ApiService {
 
     private final String api_url;
 
+    /**
+     * Instantiates a new ApiService.
+     *
+     * @param restTemplate the RestTemplate object
+     * @param api_url      the url of the api
+     */
     public ApiServiceImpl(RestTemplate restTemplate, @Value("${api.url}") String api_url) {
         this.restTemplate = restTemplate;
         this.api_url = api_url;
@@ -30,7 +36,6 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public List<User> getUsers(Integer limit) {
-
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(api_url)
                 .queryParam("limit", limit);
@@ -41,11 +46,10 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public Flux<User> getUsers(Mono<Integer> limit) {
-
         return WebClient
                 .create(api_url)
                 .get()
-                .uri(uriBuilder -> uriBuilder.queryParam("limit", limit.block()).build())
+                .uri(uriBuilder -> uriBuilder.queryParam("_limit", limit.block()).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .flatMap(resp -> resp.bodyToMono(UserData.class))

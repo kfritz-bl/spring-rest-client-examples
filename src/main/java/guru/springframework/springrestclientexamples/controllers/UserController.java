@@ -43,7 +43,7 @@ public class UserController {
 
         // model.addAttribute("users", apiService.getUsers(limit));
 
-        model.addAttribute("users",
+        model.addAttribute("_limit",
                 apiService
                         .getUsers(serverWebExchange
                                 .getFormData()
